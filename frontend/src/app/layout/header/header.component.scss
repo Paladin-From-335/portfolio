@@ -1,0 +1,17 @@
+header {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .active {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  nav {
+    width: 30%;
+    display: flex;
+    justify-content: space-around;
+  }
+}
