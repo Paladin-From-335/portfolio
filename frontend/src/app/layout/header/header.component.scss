@@ -1,17 +1,45 @@
 header {
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  margin-top: -1vh;
+  min-height: 10vh;
 
-  .active {
-    font-size: 1.2rem;
+  .site-header_content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  a {
+    color: white;
+  }
+
+  nav a {
+    display: inline-block;
+    text-decoration: none;
+
+    padding: 0.2rem 0.4rem;
+    border-radius: 10px;
+    transition:
+      transform 0.2s ease,
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  nav a.active {
+    transform: scale(1.45);
     font-weight: bold;
+    background-color: #838383;
   }
 
   nav {
+    margin-left: 60%;
     width: 30%;
     display: flex;
     justify-content: space-around;
+    align-items: center;
+  }
+  .site-header_logo {
+    font-size: 2rem;
+    text-decoration: none;
+    margin-top: 2vh;
   }
 }
