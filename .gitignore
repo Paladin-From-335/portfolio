@@ -1,4 +1,5 @@
-ROADMAP.md
-WISHES.md
+*.md
+!README.md
+
 .idea/
 .DS_Store
