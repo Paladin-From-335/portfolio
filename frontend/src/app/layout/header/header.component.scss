@@ -19,6 +19,8 @@ header {
 
     padding: 0.2rem 0.4rem;
     border-radius: 10px;
+    opacity: 0.75;
+    font-weight: 600;
     transition:
       transform 0.2s ease,
       background-color 0.2s ease,
@@ -26,9 +28,8 @@ header {
   }
 
   nav a.active {
-    transform: scale(1.45);
-    font-weight: bold;
-    background-color: #838383;
+    transform: scale(1.25);
+    opacity: 1;
   }
 
   nav {
