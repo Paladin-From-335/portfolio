@@ -18,7 +18,39 @@
       font-size: 1.2rem;
     }
 
-    iframe {
+    .video-preview {
+      position: relative;
+    }
+
+    .play-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 5rem;
+      height: 5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 50%;
+      background-color: black;
+      color: white;
+      font-size: 3rem;
+      cursor: pointer;
+
+      transition: transform 0.2s ease;
+
+      span {
+        transform: translateX(0.2rem);
+      }
+    }
+
+    .play-button:hover {
+      transform: translate(-50%, -50%) scale(1.08);
+    }
+
+    .frame {
       width: 100%;
       aspect-ratio: 16/9;
       border: 0;
