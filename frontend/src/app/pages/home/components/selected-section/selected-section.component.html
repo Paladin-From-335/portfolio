@@ -3,7 +3,6 @@
   <div class="selected-section__content">
     @for (work of works; track work.videoUrl) {
       <article class="selected-work">
-        <h3>{{ work.title }}</h3>
         @if (!isVideoActive(work.videoId)) {
           <div class="video-preview">
             <img [src]="work.thumbnailUrl" alt="Work Image" class="selected-thumbnail frame">
@@ -11,6 +10,7 @@
               <span>▶</span>
             </button>
           </div>
+        <h3>{{ work.title }}</h3>
         } @else {
           <iframe class="selected-video frame"
                   [src]="work.videoUrl"
