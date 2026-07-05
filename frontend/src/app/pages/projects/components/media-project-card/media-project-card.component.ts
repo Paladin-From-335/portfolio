@@ -1,11 +1,7 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PhotoCarouselComponent } from '../../../../shared/components/photo-carousel/photo-carousel.component';
 import { ProjectCard } from '../../../../core/models/project-card.model';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { YoutubeEmbedService } from '../../../../core/services/YoutubeEmbedService';
-import {
-  YoutubeVideoPreviewComponent
-} from '../../../../shared/components/video-preview/youtube-video-preview.component';
+import { YoutubeVideoPreviewComponent } from '../../../../shared/components/video-preview/youtube-video-preview.component';
 
 @Component({
   selector: 'app-media-project-card',
