@@ -1,0 +1,82 @@
+:host {
+  display: block;
+  width: 100%;
+}
+.video-preview-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  align-items: center;
+}
+
+.video-title {
+  font-size: 2rem;
+  text-align: start;
+  width: 65%;
+}
+
+.video-preview-wrapper--selected {
+  max-width: 1024px;
+  flex-direction: column-reverse;
+
+  .video-title {
+    text-align: end;
+    width: 100%;
+  }
+}
+
+.video-preview {
+  position: relative;
+  width: 100%;
+  max-width: 768px;
+}
+
+.frame {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+}
+
+.selected-thumbnail {
+  object-fit: cover;
+}
+
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5rem;
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.65);
+  color: white;
+  font-size: 3rem;
+  line-height: 1;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+
+  span {
+    transform: translateX(0.2rem);
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+@media (max-width: 768px) {
+  .video-preview-wrapper {
+    max-width: 100%;
+  }
+}

@@ -9,65 +9,12 @@
   }
 }
 
-.selected-work {
-  display: flex;
-  flex-direction: column-reverse;
-}
 
 .selected-section__content {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 7rem;
   padding: 0 5rem;
-
-  h3 {
-    font-size: 1.2rem;
-    text-align: end;
-  }
-
-  .video-preview {
-    position: relative;
-  }
-
-  .play-button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 5rem;
-    height: 5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    border-radius: 50%;
-    background-color: black;
-    color: white;
-    font-size: 3rem;
-    cursor: pointer;
-
-    transition: transform 0.2s ease;
-
-    span {
-      transform: translateX(0.2rem);
-    }
-  }
-
-  .play-button:hover {
-    transform: translate(-50%, -50%) scale(1.08);
-  }
-
-  .frame {
-    width: 100%;
-    aspect-ratio: 16/9;
-    border: 0;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .selected-section__content {
-    grid-template-columns: 1fr;
-  }
 }
 
 .selected-section__button {
