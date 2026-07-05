@@ -1,0 +1,18 @@
+<div class="expandable-section">
+  @if (variant() !== 'description' && title()) {
+    <h2>{{ title() }}</h2>
+  }
+  <div class="expandable-section__content"
+       [class.expandable-section__content--collapsed]="!isExpanded()"
+       [class.expandable-section__content--expanded]="isExpanded()">
+    <ng-content/>
+  </div>
+  <div class="expandable-section__actions"
+       [class.expandable-section__actions--expanded]="isExpanded()">
+    <button class="show-hide"
+            [class.show-hide--expanded]="isExpanded()"
+            (click)="toggleExpanded()">
+      {{ isExpanded() ? 'View Less' : 'View More' }}
+    </button>
+  </div>
+</div>
