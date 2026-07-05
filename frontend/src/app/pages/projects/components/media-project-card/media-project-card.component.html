@@ -1,0 +1,14 @@
+<div class="video-project-card__wrapper">
+  @if (project.frameImagesUrls) {
+    <app-photo-carousel [photos]="project.frameImagesUrls"></app-photo-carousel>
+  }
+  @if (project.videoUrl) {
+    <app-youtube-video-preview
+      [title]="project.title"
+      [videoUrl]="project.videoUrl"
+      [thumbnailUrl]="project.thumbnailUrl"
+      variant="default">
+    </app-youtube-video-preview>
+  }
+  <p class="description">{{ project.description }}</p>
+</div>

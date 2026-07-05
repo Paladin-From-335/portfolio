@@ -1,9 +1,8 @@
-<section class="projects">
-  <h2>Selected Works</h2>
-
-  <div class="projects-grid">
+<div class="projects-container">
+  <app-expandable-section title="Commercial projects">
     @for (project of projects; track project.id) {
-      <app-project-card [project]="project" />
+      <app-media-project-card [project]="project"></app-media-project-card>
     }
-  </div>
-</section>
+  </app-expandable-section>
+<!--TODO commercials will be made of 2 sub-sections, add wrapper; Then add more sections-->
+</div>
