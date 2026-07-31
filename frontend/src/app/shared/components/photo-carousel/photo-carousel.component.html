@@ -3,16 +3,16 @@
   (mouseenter)="pause()"
   (mouseleave)="resume()"
   (click)="pauseTemporarily()">
-  <button class="photo-carousel__button photo-carousel__button--prev" (click)="previousManually()">
-    <img src="arrow-prev.svg" alt="">
+  <button class="photo-carousel__button photo-carousel__button--prev"
+          type="button" (click)="previousManually()">
+    <img src="/assets/images/arrow-prev.svg" alt="">
   </button>
 
-  <button class="photo-carousel__button photo-carousel__button--next" (click)="nextManually()">
-    <img src="arrow-next.svg" alt="">
+  <button class="photo-carousel__button photo-carousel__button--next"
+          type="button" (click)="nextManually()">
+    <img src="/assets/images/arrow-next.svg" alt="">
   </button>
-  <div
-    #track
-    class="photo-carousel__track"
+  <div #track class="photo-carousel__track"
     [class.photo-carousel__track--no-transition]="!transitionEnabled()"
     [style.transform]="trackTransform()"
     (transitionend)="onTransitionEnd()">
