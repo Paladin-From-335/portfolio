@@ -14,6 +14,7 @@
 .video-title {
   font-size: 2rem;
   text-align: start;
+  font-weight: 500;
   width: 65%;
 }
 
@@ -33,14 +34,14 @@
   max-width: 768px;
 }
 
-.frame {
+.landscape-frame {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
   border: none;
 }
 
-.selected-thumbnail {
+.video-thumbnail {
   object-fit: cover;
 }
 

@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, signal, SimpleChanges } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
-import { YoutubeEmbedService } from '../../../core/services/YoutubeEmbedService';
+import { YoutubeEmbedService } from '../../../../core/services/YoutubeEmbedService';
 
 export type VideoPreviewVariant = 'default' | 'selected';
 
@@ -14,7 +14,7 @@ export class YoutubeVideoPreviewComponent implements OnChanges {
   @Input({ required: true }) videoUrl!: string;
   @Input({ required: true }) thumbnailUrl?: string;
   @Input() title = 'YouTube video player';
-  @Input() variant: VideoPreviewVariant = 'default';
+  @Input() previewVariant: VideoPreviewVariant = 'default';
 
   isPlaying = signal(false);
   safeVideoUrl?: SafeResourceUrl;

@@ -1,15 +1,15 @@
 <div class="video-preview-wrapper"
-     [class.video-preview-wrapper--selected]="variant === 'selected'">
+     [class.video-preview-wrapper--selected]="previewVariant === 'selected'">
   <h3 class="video-title">{{ title }}</h3>
   <div class="video-preview">
     @if (!isPlaying() && thumbnailUrl) {
-      <img [src]="thumbnailUrl" [alt]="title" class="selected-thumbnail frame">
+      <img [src]="thumbnailUrl" [alt]="title" class="landscape-frame video-thumbnail">
       <button class="play-button" type="button" (click)="play()" aria-label="Play video">
         <span>▶</span>
       </button>
     } @else {
       <iframe
-        class="selected-video frame"
+        class="landscape-frame landscape-video"
         [src]="safeVideoUrl"
         [title]="title"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

@@ -17,12 +17,13 @@ export const PROJECTS: ProjectCard[] = [
     thumbnailUrl: 'photo.jpg',
     tags: ['tag1', 'tag2'],
     isSelected: true,
+    type: 'video',
+    category: 'commercial',
   },
   {
     id: '2',
     title: 'Latinium Castle',
-    description:
-      'Latinium Castle ad was shot in a castle in Germany.',
+    description: 'Latinium Castle ad was shot in a castle in Germany.',
     frameImagesUrls: [
       'https://picsum.photos/id/100/200/300',
       'photo.jpg',
@@ -35,12 +36,13 @@ export const PROJECTS: ProjectCard[] = [
     thumbnailUrl: 'https://picsum.photos/id/100/200/300',
     tags: ['tag1', 'tag2'],
     isSelected: true,
+    type: 'video',
+    category: 'commercial',
   },
   {
     id: '3',
     title: 'San Mare',
-    description:
-      'San Mare ad was shot on the street in the city of Santa Margherita Ligure.',
+    description: 'San Mare ad was shot on the street in the city of Santa Margherita Ligure.',
     frameImagesUrls: [
       'https://picsum.photos/id/100/200/300',
       'photo.jpg',
@@ -53,12 +55,13 @@ export const PROJECTS: ProjectCard[] = [
     thumbnailUrl: 'https://picsum.photos/id/100/200/300',
     tags: ['tag1', 'tag2'],
     isSelected: false,
+    type: 'video',
+    category: 'commercial',
   },
   {
     id: '4',
     title: 'Maison Castel',
-    description:
-      'Maison Castel ad was shot on the street in the city of Paris.',
+    description: 'Maison Castel ad was shot on the street in the city of Paris.',
     frameImagesUrls: [
       'https://picsum.photos/id/100/200/300',
       'photo.jpg',
@@ -71,12 +74,13 @@ export const PROJECTS: ProjectCard[] = [
     thumbnailUrl: 'https://picsum.photos/id/100/200/300',
     tags: ['tag1', 'tag2'],
     isSelected: false,
+    type: 'video',
+    category: 'commercial',
   },
   {
     id: '5',
     title: 'Latinium Office',
-    description:
-      'Latinium Office ad was shot on the street in the city of Paris.',
+    description: 'Latinium Office ad was shot on the street in the city of Paris.',
     frameImagesUrls: [
       'https://picsum.photos/id/100/200/300',
       'photo.jpg',
@@ -89,5 +93,34 @@ export const PROJECTS: ProjectCard[] = [
     thumbnailUrl: 'https://picsum.photos/id/100/200/300',
     tags: ['tag1', 'tag2'],
     isSelected: true,
+    type: 'video',
+    category: 'commercial',
+  },
+  {
+    id: '6',
+    title: 'Latinium Reel',
+    playbackId: '/assets/videos/reel.mp4',
+    thumbnailUrl: 'https://picsum.photos/id/100/200/300',
+    tags: ['tag1', 'tag2'],
+    isSelected: false,
+    type: 'reel',
+  },
+  {
+    id: '7',
+    title: 'Latinium Reel2 Test',
+    playbackId: '/assets/videos/reel.mp4',
+    thumbnailUrl: 'https://picsum.photos/id/100/200/300',
+    tags: ['tag1', 'tag2'],
+    isSelected: false,
+    type: 'reel',
+  },
+  {
+    id: '8',
+    title: 'Latinium Reel3 Test',
+    playbackId: '/assets/videos/reel.mp4',
+    thumbnailUrl: 'https://picsum.photos/id/100/200/300',
+    tags: ['tag1', 'tag2'],
+    isSelected: false,
+    type: 'reel',
   },
 ];
