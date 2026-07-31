@@ -1,8 +1,14 @@
 <div class="projects-container">
-  <app-expandable-section title="Commercial projects">
-    @for (project of projects; track project.id) {
+  <!-- Commercial videos section -->
+  <app-expandable-section title="Commercial videos" variant="video">
+    @for (project of commercialVideos; track project.id) {
       <app-media-project-card [project]="project"></app-media-project-card>
     }
   </app-expandable-section>
-<!--TODO commercials will be made of 2 sub-sections, add wrapper; Then add more sections-->
+  <!--  Commercial reels section-->
+  <app-expandable-section title="Commercial reels" variant="reel">
+    <app-media-project-card [projectList]="reels"></app-media-project-card>
+  </app-expandable-section>
+  <!-- Non-commercial videos section -->
+  <!--  Photo section-->
 </div>

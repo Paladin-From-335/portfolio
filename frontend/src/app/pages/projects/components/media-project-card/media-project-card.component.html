@@ -1,14 +1,21 @@
 <div class="video-project-card__wrapper">
-  @if (project.frameImagesUrls) {
-    <app-photo-carousel [photos]="project.frameImagesUrls"></app-photo-carousel>
+  <!-- Passes only a list of reels -->
+  @if (projectList; as reels) {
+    <app-reel-carousel [reels]="reels"></app-reel-carousel>
   }
-  @if (project.videoUrl) {
-    <app-youtube-video-preview
-      [title]="project.title"
-      [videoUrl]="project.videoUrl"
-      [thumbnailUrl]="project.thumbnailUrl"
-      variant="default">
-    </app-youtube-video-preview>
+  @else if (project; as currentProject) {
+    @if (currentProject.type === PROJECT_TYPES.VIDEO && currentProject.frameImagesUrls) {
+      <app-photo-carousel [photos]="currentProject.frameImagesUrls"></app-photo-carousel>
+    }
+    @if (currentProject.type === PROJECT_TYPES.VIDEO && currentProject.videoUrl) {
+      <app-youtube-video-preview
+        [title]="currentProject.title"
+        [videoUrl]="currentProject.videoUrl"
+        [thumbnailUrl]="currentProject.thumbnailUrl"
+        previewVariant="default">
+      </app-youtube-video-preview>
+    }
+    <!--TODO replace <p> with <app-expandable-section>, pass content type and string length-->
+    <p class="description">{{ project.description }}</p>
   }
-  <p class="description">{{ project.description }}</p>
 </div>

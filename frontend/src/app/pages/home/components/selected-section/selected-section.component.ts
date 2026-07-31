@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { PROJECTS } from '../../../../core/data/project.data';
-import { YoutubeVideoPreviewComponent } from '../../../../shared/components/video-preview/youtube-video-preview.component';
+import { Component, inject } from '@angular/core';
+import { YoutubeVideoPreviewComponent } from '../../../../shared/components/video-preview/youtube/youtube-video-preview.component';
+import { ProjectService } from '../../../../core/services/project.service';
 
 @Component({
   selector: 'app-selected-section',
@@ -9,5 +9,6 @@ import { YoutubeVideoPreviewComponent } from '../../../../shared/components/vide
   styleUrl: './selected-section.component.scss',
 })
 export class SelectedSectionComponent {
-  readonly projects = PROJECTS.filter((p) => p.isSelected).slice(0, 2);
+  private readonly projectService = inject(ProjectService);
+  readonly selectedProjects = this.projectService.getSelectedCommercialVideos().slice(0, 2);
 }

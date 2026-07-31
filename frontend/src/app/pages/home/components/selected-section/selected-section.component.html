@@ -1,13 +1,13 @@
 <div class="selected-section">
   <h2>Ads</h2>
   <div class="selected-section__content">
-    @for (project of projects; track project.videoUrl) {
+    @for (project of selectedProjects; track project.videoUrl) {
       @if (project.videoUrl) {
         <app-youtube-video-preview
           [title]="project.title"
           [videoUrl]="project.videoUrl"
           [thumbnailUrl]="project.thumbnailUrl"
-          variant="selected">
+          previewVariant="selected">
         </app-youtube-video-preview>
       }
     }
