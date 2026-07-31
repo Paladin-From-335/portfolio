@@ -8,10 +8,10 @@ import { Component, input, signal } from '@angular/core';
 })
 export class ExpandableSectionComponent {
   title = input<string>();
-  variant = input<'default' | 'description' > ('default');
+  variant = input<'video' | 'commercial' | 'reel' | 'photo' | 'description'>('video');
   isExpanded = signal(false);
 
   toggleExpanded() {
-    this.isExpanded.update(v => !v);
+    this.isExpanded.update((v) => !v);
   }
 }

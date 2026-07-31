@@ -6,6 +6,9 @@
        [class.expandable-section__content--collapsed]="!isExpanded()"
        [class.expandable-section__content--expanded]="isExpanded()">
     <ng-content/>
+    @if (!isExpanded()) {
+      <span class="blur-background"></span>
+    }
   </div>
   <div class="expandable-section__actions"
        [class.expandable-section__actions--expanded]="isExpanded()">
