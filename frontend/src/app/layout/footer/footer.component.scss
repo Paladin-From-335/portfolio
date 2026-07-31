@@ -5,15 +5,15 @@ footer {
   flex-direction: column;
   align-items: center;
   height: 12vh;
+}
 
-  .footer-links {
-    min-width: 15vw;
-    display: flex;
-    justify-content: space-around;
+.footer-links {
+  min-width: 15vw;
+  display: flex;
+  justify-content: space-around;
 
-    a {
-      text-decoration: none;
-      color: white;
-    }
+  a {
+    text-decoration: none;
+    color: white;
   }
 }
