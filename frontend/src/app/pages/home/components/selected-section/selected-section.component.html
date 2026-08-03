@@ -1,25 +1,15 @@
 <div class="selected-section">
   <h2>Ads</h2>
   <div class="selected-section__content">
-    @for (work of works; track work.videoUrl) {
-      <article class="selected-work">
-        <h3>{{ work.title }}</h3>
-        @if (!isVideoActive(work.videoId)) {
-          <div class="video-preview">
-            <img [src]="work.thumbnailUrl" alt="Work Image" class="selected-thumbnail frame">
-            <button class="play-button" type="button" (click)="playVideo(work.videoId)">
-              <span>▶</span>
-            </button>
-          </div>
-        } @else {
-          <iframe class="selected-video frame"
-                  [src]="work.videoUrl"
-                  title="YouTube video player"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen>
-          </iframe>
-        }
-      </article>
+    @for (project of selectedProjects; track project.videoUrl) {
+      @if (project.videoUrl) {
+        <app-youtube-video-preview
+          [videoPreviewTitle]="project.contentTitle"
+          [videoUrl]="project.videoUrl"
+          [thumbnailUrl]="project.thumbnailUrl"
+          previewVariant="selected">
+        </app-youtube-video-preview>
+      }
     }
   </div>
   <a href="/projects" class="selected-section__button">View All Projects</a>

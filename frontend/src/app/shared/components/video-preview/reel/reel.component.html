@@ -1,0 +1,33 @@
+<!--    [attr.playback-id]="playbackId"-->
+<!--  TODO change attr.src with mux attr.playback-id-->
+<div class="reel">
+  <mux-player
+    #player
+    class="reel__video"
+    [attr.src]="playbackId"
+    [attr.poster]="thumbnailUrl"
+    [attr.title]="reelTitle"
+    playsinline
+    loop
+    preload="metadata"
+    (click)="togglePlayback(player)"
+    (play)="onPlay()"
+    (pause)="onPause()">
+  </mux-player>
+
+  @if (!isPlaying()) {
+    <button
+      class="reel__overlay"
+      type="button"
+      [attr.aria-label]="'Play ' + reelTitle"
+      (click)="togglePlayback(player)">
+      <span class="reel__play-button" aria-hidden="true">▶</span>
+    </button>
+  }
+  @if (!hasStarted()) {
+    <img
+      class="reel__thumbnail"
+      [src]="thumbnailUrl"
+      [alt]="reelTitle">
+  }
+</div>

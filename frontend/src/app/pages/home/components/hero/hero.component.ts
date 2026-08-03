@@ -8,7 +8,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrl: './hero.component.scss',
 })
 export class HeroComponent {
-  title = 'Video Director';
+  heroTitle = 'Video Director';
   subtitle = 'Commercials, branded content and visual storytelling';
 
   private readonly vimeoVideoId = '76979871';
