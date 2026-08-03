@@ -18,7 +18,7 @@ export class MediaProjectCardComponent implements OnChanges{
     const hasProject = this.project !== undefined;
     const hasProjectList = this.projectList !== undefined;
     if (hasProject === hasProjectList) {
-      throw new Error('MediaProjectCardComponent requires exactly one input: project or projects.');
+      console.error('MediaProjectCardComponent requires exactly one input: project or projectList.');
     }
   }
 

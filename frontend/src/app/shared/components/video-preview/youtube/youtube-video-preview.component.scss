@@ -41,8 +41,12 @@
   border: none;
 }
 
-.video-thumbnail {
+.video-thumbnail{
   object-fit: cover;
+
+  &--fallback {
+    background-color: rgb(34, 34, 34);
+  }
 }
 
 .play-button {

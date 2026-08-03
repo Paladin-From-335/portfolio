@@ -4,7 +4,7 @@
     @for (project of selectedProjects; track project.videoUrl) {
       @if (project.videoUrl) {
         <app-youtube-video-preview
-          [title]="project.title"
+          [videoPreviewTitle]="project.contentTitle"
           [videoUrl]="project.videoUrl"
           [thumbnailUrl]="project.thumbnailUrl"
           previewVariant="selected">

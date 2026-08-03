@@ -9,7 +9,7 @@
     }
     @if (currentProject.type === PROJECT_TYPES.VIDEO && currentProject.videoUrl) {
       <app-youtube-video-preview
-        [title]="currentProject.title"
+        [videoPreviewTitle]="currentProject.contentTitle"
         [videoUrl]="currentProject.videoUrl"
         [thumbnailUrl]="currentProject.thumbnailUrl"
         previewVariant="default">

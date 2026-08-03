@@ -1,4 +1,15 @@
-import { Component, computed, ElementRef, input, signal, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  input,
+  OnDestroy,
+  signal,
+  ViewChild,
+} from '@angular/core';
 
 @Component({
   selector: 'app-photo-carousel',
@@ -6,32 +17,57 @@ import { Component, computed, ElementRef, input, signal, ViewChild } from '@angu
   templateUrl: './photo-carousel.component.html',
   styleUrl: './photo-carousel.component.scss',
 })
-export class PhotoCarouselComponent {
+export class PhotoCarouselComponent implements AfterViewInit, OnDestroy {
   photos = input.required<string[]>();
 
-  @ViewChild('track') track?: ElementRef<HTMLDivElement>;
+  @ViewChild('track')
+  private track?: ElementRef<HTMLDivElement>;
+  private resizeObserver?: ResizeObserver;
 
   currentIndex = signal(0);
   isPaused = signal(false);
-  transitionEnabled = signal(true);
+  transitionEnabled = signal(false);
   visibleCount = signal(3);
   slideSlots = signal(3.5);
   loopedPhotos = computed(() => {
     const photos = this.photos();
+    if (photos.length < 2) return photos;
     return [...photos, ...photos, ...photos];
   });
 
+  trackTransform = 'translateX(0)';
+  private isMoving = false;
   private intervalId?: number;
   private pauseTimeoutId?: number;
-  private readonly handleResize = (): void => this.updateVisibleCount();
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly handleResize = (): void => {
+    this.updateVisibleCount();
+    requestAnimationFrame(() => {
+      this.moveToCurrentItem(false);
+    });
+  };
 
   ngAfterViewInit(): void {
     this.updateVisibleCount();
+    this.cdr.detectChanges();
     window.addEventListener('resize', this.handleResize);
-    this.currentIndex.set(this.photos().length);
+    const photosLength = this.photos().length;
+    if (photosLength === 0) return;
+
+    // Start from the beginning of the middle copy.
+    this.currentIndex.set(photosLength);
+    this.cdr.detectChanges();
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const item = this.track?.nativeElement.querySelector<HTMLElement>('.photo-carousel__item');
+        if (!item) return;
+        this.resizeObserver = new ResizeObserver(() => this.moveToCurrentItem(false));
+        this.resizeObserver.observe(item);
+      });
+    });
 
     this.intervalId = window.setInterval(() => {
-      if (!this.isPaused()) {
+      if (!this.isPaused() && !this.isMoving) {
         this.next();
       }
     }, 3000);
@@ -41,6 +77,95 @@ export class PhotoCarouselComponent {
     window.clearInterval(this.intervalId);
     window.clearTimeout(this.pauseTimeoutId);
     window.removeEventListener('resize', this.handleResize);
+    this.resizeObserver?.disconnect();
+  }
+
+  next(): void {
+    if (this.isMoving || this.photos().length < 2) {
+      return;
+    }
+
+    this.isMoving = true;
+    this.currentIndex.update((index) => index + 1);
+    this.moveToCurrentItem(true);
+  }
+
+  previous(): void {
+    if (this.isMoving || this.photos().length < 2) {
+      return;
+    }
+
+    this.isMoving = true;
+    this.currentIndex.update((index) => index - 1);
+    this.moveToCurrentItem(true);
+  }
+
+  nextManually(): void {
+    this.pauseTemporarily();
+    this.next();
+  }
+
+  previousManually(): void {
+    this.pauseTemporarily();
+    this.previous();
+  }
+
+  onTransitionEnd(event: Event): void {
+    const transitionEvent = event as TransitionEvent;
+    const track = this.track?.nativeElement;
+
+    if (
+      !track ||
+      transitionEvent.target !== track ||
+      transitionEvent.propertyName !== 'transform'
+    ) {
+      return;
+    }
+
+    const photosLength = this.photos().length;
+    if (this.currentIndex() >= photosLength * 2) {
+      // First photo of third copy → first photo of middle copy.
+      this.currentIndex.set(photosLength);
+      this.moveToCurrentItem(false);
+    } else if (this.currentIndex() < photosLength) {
+      // Last photo of first copy → last photo of middle copy.
+      this.currentIndex.set(photosLength * 2 - 1);
+      this.moveToCurrentItem(false);
+    }
+    this.isMoving = false;
+  }
+
+  pause(): void {
+    this.isPaused.set(true);
+  }
+
+  resume(): void {
+    this.isPaused.set(false);
+  }
+
+  pauseTemporarily(): void {
+    this.pause();
+    window.clearTimeout(this.pauseTimeoutId);
+    this.pauseTimeoutId = window.setTimeout(() => this.resume(), 20_000);
+  }
+
+  isSideItem(index: number): boolean {
+    const relativeIndex = index - this.currentIndex();
+    return relativeIndex === -1 || relativeIndex === this.visibleCount();
+  }
+
+  private moveToCurrentItem(animated: boolean): void {
+    const track = this.track?.nativeElement;
+    const item = track?.querySelector<HTMLElement>('.photo-carousel__item');
+
+    if (!track || !item) return;
+
+    this.transitionEnabled.set(animated);
+    const itemWidth = item.getBoundingClientRect().width;
+    const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0;
+    const offset = this.currentIndex() * (itemWidth + gap);
+    this.trackTransform = `translateX(-${offset}px)`;
+    this.cdr.detectChanges();
   }
 
   private updateVisibleCount(): void {
@@ -55,71 +180,5 @@ export class PhotoCarouselComponent {
       this.visibleCount.set(3);
       this.slideSlots.set(3.5);
     }
-  }
-
-  trackTransform(): string {
-    return `translateX(-${this.currentIndex() * (100 / this.visibleCount())}%)`;
-  }
-
-  pause(): void {
-    this.isPaused.set(true);
-  }
-
-  resume(): void {
-    this.isPaused.set(false);
-  }
-
-  pauseTemporarily(): void {
-    this.pause();
-
-    window.clearTimeout(this.pauseTimeoutId);
-
-    this.pauseTimeoutId = window.setTimeout(() => {
-      this.resume();
-    }, 20000);
-  }
-
-  next(): void {
-    this.transitionEnabled.set(true);
-    this.currentIndex.update((index) => index + 1);
-  }
-
-  onTransitionEnd(): void {
-    const photosLength = this.photos().length;
-
-    if (this.currentIndex() >= photosLength * 2) {
-      this.jumpWithoutAnimation(photosLength);
-    }
-
-    if (this.currentIndex() < photosLength) {
-      this.jumpWithoutAnimation(photosLength * 2 - 1);
-    }
-  }
-
-  private jumpWithoutAnimation(index: number): void {
-    this.transitionEnabled.set(false);
-    this.currentIndex.set(index);
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        this.transitionEnabled.set(true);
-      });
-    });
-  }
-
-  previousManually(): void {
-    this.pauseTemporarily();
-    this.transitionEnabled.set(true);
-    this.currentIndex.update((index) => index - 1);
-  }
-
-  nextManually(): void {
-    this.pauseTemporarily();
-    this.next();
-  }
-
-  isSideItem(index: number): boolean {
-    const relativeIndex = index - this.currentIndex();
-    return relativeIndex === -1 || relativeIndex === this.visibleCount();
   }
 }

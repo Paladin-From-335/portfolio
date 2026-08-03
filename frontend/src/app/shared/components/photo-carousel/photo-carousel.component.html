@@ -1,25 +1,25 @@
-<div
-  class="photo-carousel"
-  (mouseenter)="pause()"
-  (mouseleave)="resume()"
-  (click)="pauseTemporarily()">
+<div class="photo-carousel"
+     (mouseenter)="pause()" (mouseleave)="resume()"
+     (click)="pauseTemporarily()">
   <button class="photo-carousel__button photo-carousel__button--prev"
+          aria-label="Previous photo"
           type="button" (click)="previousManually()">
     <img src="/assets/images/arrow-prev.svg" alt="">
   </button>
 
   <button class="photo-carousel__button photo-carousel__button--next"
+          aria-label="Next photo"
           type="button" (click)="nextManually()">
     <img src="/assets/images/arrow-next.svg" alt="">
   </button>
   <div #track class="photo-carousel__track"
-    [class.photo-carousel__track--no-transition]="!transitionEnabled()"
-    [style.transform]="trackTransform()"
-    (transitionend)="onTransitionEnd()">
+       [class.photo-carousel__track--no-transition]="!transitionEnabled()"
+       [style.transform]="trackTransform"
+       (transitionend)="onTransitionEnd($event)">
     @for (photo of loopedPhotos(); track $index) {
       <div class="photo-carousel__item"
            [class.photo-carousel__item--side]="isSideItem($index)">
-        <img [src]="photo" alt="">
+        <img [src]="photo" alt="Loading">
       </div>
     }
   </div>

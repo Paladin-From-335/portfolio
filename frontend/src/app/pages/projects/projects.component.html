@@ -1,12 +1,12 @@
 <div class="projects-container">
   <!-- Commercial videos section -->
-  <app-expandable-section title="Commercial videos" variant="video">
+  <app-expandable-section contentTitle="Commercial videos" variant="video">
     @for (project of commercialVideos; track project.id) {
       <app-media-project-card [project]="project"></app-media-project-card>
     }
   </app-expandable-section>
   <!--  Commercial reels section-->
-  <app-expandable-section title="Commercial reels" variant="reel">
+  <app-expandable-section contentTitle="Commercial reels" variant="reel">
     <app-media-project-card [projectList]="reels"></app-media-project-card>
   </app-expandable-section>
   <!-- Non-commercial videos section -->

@@ -18,7 +18,7 @@ type MuxPlayerElement = HTMLElement & {
 export class ReelComponent {
   @Input({ required: true }) playbackId!: string;
   @Input() thumbnailUrl?: string;
-  @Input() title = 'Reel';
+  @Input() reelTitle = 'Reel';
 
   hasStarted = signal(false);
   isPlaying = signal(false);

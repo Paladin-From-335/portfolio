@@ -13,7 +13,7 @@ export type VideoPreviewVariant = 'default' | 'selected';
 export class YoutubeVideoPreviewComponent implements OnChanges {
   @Input({ required: true }) videoUrl!: string;
   @Input({ required: true }) thumbnailUrl?: string;
-  @Input() title = 'YouTube video player';
+  @Input() videoPreviewTitle = 'YouTube video player';
   @Input() previewVariant: VideoPreviewVariant = 'default';
 
   isPlaying = signal(false);

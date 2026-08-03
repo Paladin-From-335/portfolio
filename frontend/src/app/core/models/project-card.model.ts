@@ -17,7 +17,7 @@ export type VideoCategory =
 
 export interface BaseProjectCard {
   id: string;
-  title: string;
+  contentTitle: string;
   tags: string[];
   isSelected: boolean;
   type: ProjectType;

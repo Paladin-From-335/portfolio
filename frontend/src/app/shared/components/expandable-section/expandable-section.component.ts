@@ -7,9 +7,10 @@ import { Component, input, signal } from '@angular/core';
   styleUrl: './expandable-section.component.scss',
 })
 export class ExpandableSectionComponent {
-  title = input<string>();
+  contentTitle = input<string>();
   variant = input<'video' | 'commercial' | 'reel' | 'photo' | 'description'>('video');
   isExpanded = signal(false);
+  protected contentId?: string;
 
   toggleExpanded() {
     this.isExpanded.update((v) => !v);
