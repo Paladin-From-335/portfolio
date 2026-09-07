@@ -1,13 +1,25 @@
 <header>
-<div class="site-header_content">
-    <a class="site-header_logo" href="/">
-      Jane Doe
-    </a>
-    <nav>
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Home</a>
-      <a routerLink="/projects" routerLinkActive="active">Projects</a>
-      <a routerLink="/about" routerLinkActive="active">About</a>
-      <a routerLink="/contacts" routerLinkActive="active">Contact</a>
+  <div class="site-header_content">
+    <button class="site-header_menu-button" type="button"
+            (click)="toggleMenu()" [class.open]="isMenuOpen()"
+            aria-label="Toggle navigation menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <a class="site-header_logo" routerLink="/" (click)="closeMenu()">Jane Doe</a>
+
+    <nav [class.open]="isMenuOpen()">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+         (click)="closeMenu()">Home</a>
+      <a routerLink="/projects" routerLinkActive="active" (click)="closeMenu()">Projects</a>
+      <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About</a>
+      <a routerLink="/contacts" routerLinkActive="active" (click)="closeMenu()">Contact</a>
     </nav>
   </div>
+
+  @if (isMenuOpen()) {
+    <div class="site-header_backdrop" (click)="closeMenu()"></div>
+  }
 </header>

@@ -17,3 +17,16 @@ footer {
     color: white;
   }
 }
+
+@media (max-width: 768px) {
+  .footer-links {
+    width: 70vw;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 932px) and (orientation: landscape) {
+  .footer-links {
+    width: 50vw;
+  }
+}

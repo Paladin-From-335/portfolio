@@ -47,6 +47,18 @@ export class PhotoCarouselComponent implements AfterViewInit, OnDestroy {
     });
   };
 
+  private pointerStartX = 0;
+  private pointerStartY = 0;
+  private isPointerDown = false;
+
+  private readonly swipeThreshold = 50;
+  private readonly interactionPauseMs = 5000;
+  private pointerDownAt = 0;
+  private readonly longPressThresholdMs = 500;
+
+  private lastSwipeAt = 0;
+  private readonly swipeCooldownMs = 800;
+
   ngAfterViewInit(): void {
     this.updateVisibleCount();
     this.cdr.detectChanges();
@@ -145,8 +157,7 @@ export class PhotoCarouselComponent implements AfterViewInit, OnDestroy {
 
   pauseTemporarily(): void {
     this.pause();
-    window.clearTimeout(this.pauseTimeoutId);
-    this.pauseTimeoutId = window.setTimeout(() => this.resume(), 20_000);
+    this.resumeAfterDelay();
   }
 
   isSideItem(index: number): boolean {
@@ -159,11 +170,17 @@ export class PhotoCarouselComponent implements AfterViewInit, OnDestroy {
     const item = track?.querySelector<HTMLElement>('.photo-carousel__item');
 
     if (!track || !item) return;
-
     this.transitionEnabled.set(animated);
     const itemWidth = item.getBoundingClientRect().width;
     const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0;
-    const offset = this.currentIndex() * (itemWidth + gap);
+    let offset = this.currentIndex() * (itemWidth + gap);
+
+    if (window.innerWidth < 768) {
+      const containerWidth =
+        track.parentElement?.getBoundingClientRect().width ?? window.innerWidth;
+      const centerOffset = (containerWidth - itemWidth) / 2;
+      offset -= centerOffset;
+    }
     this.trackTransform = `translateX(-${offset}px)`;
     this.cdr.detectChanges();
   }
@@ -180,5 +197,58 @@ export class PhotoCarouselComponent implements AfterViewInit, OnDestroy {
       this.visibleCount.set(3);
       this.slideSlots.set(3.5);
     }
+  }
+
+  onPointerDown(event: PointerEvent): void {
+    this.isPointerDown = true;
+    this.pointerStartX = event.clientX;
+    this.pointerStartY = event.clientY;
+    this.pointerDownAt = Date.now();
+
+    window.clearTimeout(this.pauseTimeoutId);
+    this.pause();
+  }
+
+  onPointerUp(event: PointerEvent): void {
+    if (!this.isPointerDown) return;
+    this.isPointerDown = false;
+    const deltaX = event.clientX - this.pointerStartX;
+    const deltaY = event.clientY - this.pointerStartY;
+    const isHorizontalSwipe =
+      Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) >= this.swipeThreshold;
+    if (isHorizontalSwipe) {
+      const now = Date.now();
+      if (now - this.lastSwipeAt >= this.swipeCooldownMs) {
+        this.lastSwipeAt = now;
+        if (deltaX < 0) {
+          this.next();
+        } else {
+          this.previous();
+        }
+      }
+    }
+
+    this.resumeAfterDelay();
+  }
+
+  onPointerCancel(): void {
+    this.isPointerDown = false;
+    this.resumeAfterDelay();
+  }
+
+  onCarouselClick(): void {
+    const pressDuration = Date.now() - this.pointerDownAt;
+    if (pressDuration > this.longPressThresholdMs) {
+      return;
+    }
+    this.pauseTemporarily();
+  }
+
+  private resumeAfterDelay(): void {
+    window.clearTimeout(this.pauseTimeoutId);
+
+    this.pauseTimeoutId = window.setTimeout(() => {
+      this.resume();
+    }, this.interactionPauseMs);
   }
 }
