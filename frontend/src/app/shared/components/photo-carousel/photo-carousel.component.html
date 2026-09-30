@@ -1,6 +1,6 @@
 <div class="photo-carousel"
-     (mouseenter)="pause()" (mouseleave)="resume()"
-     (click)="pauseTemporarily()">
+     (mouseenter)="pause()" (mouseleave)="resume()" (click)="onCarouselClick()"
+     (pointerdown)="onPointerDown($event)" (pointerup)="onPointerUp($event)" (pointercancel)="onPointerCancel()">
   <button class="photo-carousel__button photo-carousel__button--prev"
           aria-label="Previous photo"
           type="button" (click)="previousManually()">

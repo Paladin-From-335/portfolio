@@ -69,7 +69,7 @@
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 762px) {
   .reel-carousel__viewport {
     width: 100%;
   }
@@ -80,6 +80,27 @@
   }
 
   .reel-carousel__arrow {
-    display: none;
+    display: flex;
+
+    width: 2.5rem;
+    height: 2.5rem;
+    opacity: 0.7;
+  }
+}
+
+@media (max-width: 932px) and (orientation: landscape) {
+  .reel-carousel__viewport {
+    width: 82%;
+  }
+
+  .reel-carousel__track {
+    --gap: 8px;
+    --item-width: 42%;
+  }
+
+  .reel-carousel__arrow {
+    width: 2.5rem;
+    height: 2.5rem;
+    opacity: 0.7;
   }
 }

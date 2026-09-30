@@ -38,3 +38,36 @@
   transform: translateY(-2px);
 
 }
+
+@media (max-width: 768px) {
+  .selected-section {
+    padding: 3rem 0;
+
+    h2 {
+      margin: 0 0 2rem 5vw;
+      font-size: 2.5rem;
+    }
+  }
+
+  .selected-section__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    padding: 0;
+  }
+
+  app-youtube-video-preview {
+    width: 95vmin;
+  }
+
+  .selected-section__button {
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 932px) and (orientation: landscape) {
+    app-youtube-video-preview {
+      width: 70vw;
+    }
+  }
+}

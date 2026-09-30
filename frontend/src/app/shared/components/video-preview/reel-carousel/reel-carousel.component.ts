@@ -32,6 +32,12 @@ export class ReelCarouselComponent implements OnChanges, AfterViewInit {
   isMoving = false;
   trackTransform = 'translateX(0)';
 
+  private pointerStartX = 0;
+  private pointerStartY = 0;
+  private isPointerDown = false;
+
+  private readonly swipeThreshold = 50;
+
   ngOnChanges(): void {
     this.createInfiniteList();
   }
@@ -117,5 +123,40 @@ export class ReelCarouselComponent implements OnChanges, AfterViewInit {
     const offset = viewportWidth / 2 - itemWidth / 2 - this.currentIndex * (itemWidth + gap);
     this.trackTransform = `translateX(${offset}px)`;
     this.cdr.detectChanges();
+  }
+
+  onPointerDown(event: PointerEvent): void {
+    this.isPointerDown = true;
+    this.pointerStartX = event.clientX;
+    this.pointerStartY = event.clientY;
+  }
+
+  onPointerUp(event: PointerEvent): void {
+    if (!this.isPointerDown) {
+      return;
+    }
+
+    this.isPointerDown = false;
+
+    const deltaX = event.clientX - this.pointerStartX;
+    const deltaY = event.clientY - this.pointerStartY;
+
+    const isHorizontalSwipe =
+      Math.abs(deltaX) > Math.abs(deltaY) &&
+      Math.abs(deltaX) >= this.swipeThreshold;
+
+    if (!isHorizontalSwipe) {
+      return;
+    }
+
+    if (deltaX < 0) {
+      this.next();
+    } else {
+      this.previous();
+    }
+  }
+
+  onPointerCancel(): void {
+    this.isPointerDown = false;
   }
 }

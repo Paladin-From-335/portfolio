@@ -1,6 +1,7 @@
 <div class="video-preview-wrapper"
      [class.video-preview-wrapper--selected]="previewVariant === 'selected'">
-  <h3 class="video-title">{{ videoPreviewTitle }}</h3>
+  <h3 class="video-title"
+      [class.video-title--selected]="previewVariant === 'selected'">{{ videoPreviewTitle }}</h3>
   <div class="video-preview">
     @if (!isPlaying()) {
       @if (thumbnailUrl) {

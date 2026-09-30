@@ -1,10 +1,10 @@
 <div class="reel-carousel">
-  <div #viewport class="reel-carousel__viewport">
-    <div
-      #track class="reel-carousel__track"
-      [class.reel-carousel__track--animated]="isAnimated"
-      [style.transform]="trackTransform"
-      (transitionend)="onTransitionEnd($event)">
+  <div #viewport class="reel-carousel__viewport"
+       (pointerdown)="onPointerDown($event)" (pointerup)="onPointerUp($event)" (pointercancel)="onPointerCancel()">
+    <div #track class="reel-carousel__track"
+         [class.reel-carousel__track--animated]="isAnimated"
+         [style.transform]="trackTransform"
+         (transitionend)="onTransitionEnd($event)">
       @for (reel of displayedReels; track $index) {
         <div class="reel-carousel__item">
           <app-reel
@@ -16,16 +16,14 @@
       }
     </div>
   </div>
-  <button
-    class="reel-carousel__arrow reel-carousel__arrow--previous"
-    type="button" aria-label="Previous reel"
-    (click)="previous()">
+
+  <button class="reel-carousel__arrow reel-carousel__arrow--previous"
+          type="button" aria-label="Previous reel" (click)="previous()">
     <img src="/assets/images/arrow-prev.svg" alt="">
   </button>
-  <button
-    class="reel-carousel__arrow reel-carousel__arrow--next"
-    type="button" aria-label="Next reel"
-    (click)="next()">
+
+  <button class="reel-carousel__arrow reel-carousel__arrow--next" type="button"
+          aria-label="Next reel" (click)="next()">
     <img src="/assets/images/arrow-next.svg" alt="">
   </button>
 </div>
