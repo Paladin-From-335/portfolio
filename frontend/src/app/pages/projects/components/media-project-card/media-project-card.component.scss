@@ -15,3 +15,22 @@
   padding-bottom: 2rem;
 }
 
+@media (max-width: 768px) {
+  app-youtube-video-preview {
+    width: 95vw;
+  }
+
+  .description {
+    width: 85vw;
+  }
+}
+
+@media (max-width: 932px) and (orientation: landscape) {
+  app-youtube-video-preview {
+    width: 70vw;
+  }
+
+  .description {
+    width: 60vw;
+  }
+}
