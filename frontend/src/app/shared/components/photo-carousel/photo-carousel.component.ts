@@ -19,6 +19,7 @@ import {
 })
 export class PhotoCarouselComponent implements AfterViewInit, OnDestroy {
   photos = input.required<string[]>();
+  photoAlts = input<string[]>([]);
 
   @ViewChild('track')
   private track?: ElementRef<HTMLDivElement>;

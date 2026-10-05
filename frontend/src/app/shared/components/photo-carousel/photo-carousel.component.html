@@ -19,7 +19,7 @@
     @for (photo of loopedPhotos(); track $index) {
       <div class="photo-carousel__item"
            [class.photo-carousel__item--side]="isSideItem($index)">
-        <img [src]="photo" alt="Loading">
+        <img [src]="photo" [alt]="photoAlts()[$index % photos().length] || ''" loading="lazy" decoding="async">
       </div>
     }
   </div>

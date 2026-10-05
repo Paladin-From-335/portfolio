@@ -12,10 +12,11 @@ import { MediaProjectCardComponent } from './components/media-project-card/media
   styleUrl: './projects.component.scss',
 })
 export class ProjectsComponent {
-  private readonly projectService = inject(ProjectService);
-  private readonly projects = this.projectService.getProjects();
-  commercialVideos = this.projectService.getCommercialVideos();
-  noncommercialVideos = this.projectService.getNonCommercialVideos();
-  reels = this.projectService.getReels();
-  photos = this.projectService.getPhotos();
+  readonly projectService = inject(ProjectService);
+  readonly commercialVideos = this.projectService.commercialVideos;
+  readonly reels = this.projectService.reels;
+
+  constructor() {
+    void this.projectService.load();
+  }
 }

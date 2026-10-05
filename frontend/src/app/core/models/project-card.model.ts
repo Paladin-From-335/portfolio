@@ -4,16 +4,14 @@ export const PROJECT_TYPES = {
   PHOTO: 'photo',
 } as const;
 
-export type ProjectType =
-  (typeof PROJECT_TYPES)[keyof typeof PROJECT_TYPES];
+export type ProjectType = (typeof PROJECT_TYPES)[keyof typeof PROJECT_TYPES];
 
 export const VIDEO_CATEGORIES = {
   COMMERCIAL: 'commercial',
   NONCOMMERCIAL: 'noncommercial',
 } as const;
 
-export type VideoCategory =
-  (typeof VIDEO_CATEGORIES)[keyof typeof VIDEO_CATEGORIES];
+export type VideoCategory = (typeof VIDEO_CATEGORIES)[keyof typeof VIDEO_CATEGORIES];
 
 export interface BaseProjectCard {
   id: string;
@@ -29,6 +27,7 @@ export interface VideoProjectCard extends BaseProjectCard {
   category: VideoCategory;
   description?: string;
   frameImagesUrls?: string[];
+  frameImagesAlts?: string[];
   videoId?: string;
   videoUrl?: string;
   thumbnailUrl?: string;
@@ -43,10 +42,7 @@ export interface ReelProjectCard extends BaseProjectCard {
 export interface PhotoProjectCard extends BaseProjectCard {
   type: typeof PROJECT_TYPES.PHOTO;
   frameImagesUrls: string[];
+  frameImagesAlts?: string[];
 }
 
-
-export type ProjectCard =
-  | VideoProjectCard
-  | ReelProjectCard
-  | PhotoProjectCard;
+export type ProjectCard = VideoProjectCard | ReelProjectCard | PhotoProjectCard;
