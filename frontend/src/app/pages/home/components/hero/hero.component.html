@@ -1,28 +1,25 @@
 <div class="hero">
-<!--  <iframe class="hero__video"-->
-<!--          [src]="heroVideoUrl"-->
-<!--          frameborder="0"-->
-<!--          allow="autoplay; fullscreen; picture-in-picture"-->
-<!--          allowfullscreen>-->
-<!--  </iframe>-->
-
-<!--Temporary solution, until the video is uploaded-->
-  <video
-    class="hero__video"
-    autoplay
-    muted
-    loop
-    playsinline>
-    <source src="assets/videos/showreel26_v1.mp4" type="video/mp4">
-  </video>
-
+  @if (settings(); as hero) {
+    <img
+      class="hero__video hero__poster"
+      [src]="hero.heroPosterUrl"
+      [alt]="hero.heroPosterAlt"
+      fetchpriority="high"
+    />
+    @if (heroVideoUrl(); as videoUrl) {
+      <iframe
+        class="hero__video"
+        [src]="videoUrl"
+        [title]="hero.heroVideoTitle"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    }
+  }
   <div class="hero__overlay"></div>
-
   <div class="hero__content">
     <h1>{{ heroTitle }}</h1>
     <p>{{ subtitle }}</p>
-    <a href="/projects" class="hero__button">
-      View Projects
-    </a>
+    <a href="/projects" class="hero__button">View Projects</a>
   </div>
 </div>

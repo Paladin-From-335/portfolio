@@ -1,4 +1,5 @@
 header {
+  position: relative;
   margin-top: -1vh;
   min-height: 10vh;
   padding: 2vh 0 1vh;
@@ -38,6 +39,21 @@ header {
   }
 }
 
+.site-header_brand-image {
+  margin: 10px 0 0 10px;
+  position: absolute;
+  inset: 0 auto 0 0;
+  display: block;
+  aspect-ratio: 1;
+
+  img {
+    display: block;
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+  }
+}
+
 .site-header_logo {
   font-size: 2rem;
   text-decoration: none;
@@ -61,6 +77,10 @@ header {
 
 /* MOBILE */
 @media (max-width: 768px) {
+  .site-header_brand-image {
+    display: none;
+  }
+
   header {
     min-height: 10vh;
     padding: 2vh 0 1vh;

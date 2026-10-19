@@ -1,14 +1,27 @@
 <div class="selected-section">
   <h2>Ads</h2>
   <div class="selected-section__content">
-    @for (project of selectedProjects; track project.videoUrl) {
-      @if (project.videoUrl) {
-        <app-youtube-video-preview
-          [videoPreviewTitle]="project.contentTitle"
-          [videoUrl]="project.videoUrl"
-          [thumbnailUrl]="project.thumbnailUrl"
-          previewVariant="selected">
-        </app-youtube-video-preview>
+    @if (projectService.loading()) {
+      <p role="status">Loading projects…</p>
+    } @else if (projectService.error()) {
+      <p role="alert">{{ projectService.error() }}</p>
+      <button type="button" (click)="projectService.load()">Try again</button>
+    } @else {
+      @for (project of selectedProjects(); track project.id) {
+        @if (project.videoUrl) {
+          <app-youtube-video-preview
+            [brandName]="project.brandName"
+            [projectName]="project.projectName"
+            [date]="project.date"
+            [videoUrl]="project.videoUrl"
+            [thumbnailUrl]="project.thumbnailUrl"
+            previewVariant="selected"
+          >
+          </app-youtube-video-preview>
+        }
+      }
+      @if (!selectedProjects().length) {
+        <p>No selected projects yet.</p>
       }
     }
   </div>

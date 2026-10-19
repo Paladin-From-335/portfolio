@@ -18,6 +18,8 @@
     "@angular/platform-browser": "^22.0.0",
     "@angular/router": "^22.0.0",
     "@mux/mux-player": "^3.13.0",
+    "@sanity/client": "^8.9.0",
+    "@sanity/image-url": "^2.1.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

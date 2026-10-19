@@ -1,4 +1,7 @@
 <header>
+  <a class="site-header_brand-image" routerLink="/" aria-label="Home" (click)="closeMenu()">
+    <img src="assets/logo.png" alt="" width="2048" height="2048">
+  </a>
   <div class="site-header_content">
     <button class="site-header_menu-button" type="button"
             (click)="toggleMenu()" [class.open]="isMenuOpen()"

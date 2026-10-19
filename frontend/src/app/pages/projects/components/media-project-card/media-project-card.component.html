@@ -4,12 +4,14 @@
     <app-reel-carousel [reels]="reels"></app-reel-carousel>
   }
   @else if (project; as currentProject) {
-    @if (currentProject.type === PROJECT_TYPES.VIDEO && currentProject.frameImagesUrls) {
-      <app-photo-carousel [photos]="currentProject.frameImagesUrls"></app-photo-carousel>
+    @if (currentProject.type === PROJECT_TYPES.VIDEO && currentProject.frameImagesUrls?.length) {
+      <app-photo-carousel [photos]="currentProject.frameImagesUrls" [photoAlts]="currentProject.frameImagesAlts ?? []"></app-photo-carousel>
     }
     @if (currentProject.type === PROJECT_TYPES.VIDEO && currentProject.videoUrl) {
       <app-youtube-video-preview
-        [videoPreviewTitle]="currentProject.contentTitle"
+        [brandName]="currentProject.brandName"
+        [projectName]="currentProject.projectName"
+        [date]="currentProject.date"
         [videoUrl]="currentProject.videoUrl"
         [thumbnailUrl]="currentProject.thumbnailUrl"
         previewVariant="default">

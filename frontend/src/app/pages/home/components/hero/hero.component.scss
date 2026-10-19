@@ -23,6 +23,10 @@
   background: rgba(0, 0, 0, 0.35);
 }
 
+.hero__poster {
+  object-fit: cover;
+}
+
 .hero__content {
   position: relative;
   z-index: 1;

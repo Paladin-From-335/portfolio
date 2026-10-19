@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Component, computed, inject } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ProjectService } from '../../../../core/services/project.service';
 
 @Component({
   selector: 'app-hero',
@@ -8,16 +9,24 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrl: './hero.component.scss',
 })
 export class HeroComponent {
-  heroTitle = 'Video Director';
-  subtitle = 'Commercials, branded content and visual storytelling';
+  readonly heroTitle = 'Video Director';
+  readonly subtitle = 'Commercials, branded content and visual storytelling';
+  private readonly projectService = inject(ProjectService);
+  private readonly sanitizer = inject(DomSanitizer);
+  readonly settings = this.projectService.settings;
+  readonly heroVideoUrl = computed(() => {
+    const settings = this.settings();
+    if (!settings) return null;
+    // Only validated IDs are interpolated into a fixed Vimeo origin.
+    const url = new URL(`https://player.vimeo.com/video/${settings.heroVimeoId}`);
+    if (settings.heroVimeoHash) url.searchParams.set('h', settings.heroVimeoHash);
+    for (const key of ['autoplay', 'muted', 'loop', 'background', 'playsinline', 'dnt']) {
+      url.searchParams.set(key, '1');
+    }
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url.toString());
+  });
 
-  private readonly vimeoVideoId = '76979871';
-
-  heroVideoUrl: SafeResourceUrl;
-
-  constructor(private sanitizer: DomSanitizer) {
-    this.heroVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `https://player.vimeo.com/video/${this.vimeoVideoId}?autoplay=1&muted=1&loop=1&background=1`,
-    );
+  constructor() {
+    void this.projectService.load();
   }
 }

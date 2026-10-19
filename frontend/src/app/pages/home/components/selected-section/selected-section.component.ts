@@ -9,6 +9,10 @@ import { ProjectService } from '../../../../core/services/project.service';
   styleUrl: './selected-section.component.scss',
 })
 export class SelectedSectionComponent {
-  private readonly projectService = inject(ProjectService);
-  readonly selectedProjects = this.projectService.getSelectedCommercialVideos().slice(0, 2);
+  readonly projectService = inject(ProjectService);
+  readonly selectedProjects = this.projectService.selectedCommercialVideos;
+
+  constructor() {
+    void this.projectService.load();
+  }
 }
