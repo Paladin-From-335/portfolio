@@ -19,7 +19,7 @@ describe('Projects CMS states', () => {
     expect(load).toHaveBeenCalledTimes(1);
     expect(fixture.nativeElement.textContent).toContain('Loading projects');
     expect(fixture.nativeElement.querySelector('app-photo-carousel')).toBeNull();
-    commercialVideos.set([{ id: 'cms-project', type: 'video', category: 'commercial', contentTitle: 'From CMS',
+    commercialVideos.set([{ id: 'cms-project', type: 'video', category: 'commercial', brandName: 'From CMS',
       tags: [], isSelected: true, description: 'CMS description', frameImagesUrls: [],
       videoUrl: 'https://www.youtube.com/watch?v=g17hO5fSrvg', thumbnailUrl: 'https://cdn.sanity.io/poster.jpg' }]);
     loading.set(false);

@@ -20,6 +20,8 @@ interface CmsImage {
 interface CmsProject {
   _id: string;
   contentTitle?: string;
+  projectName?: string;
+  date?: string;
   type?: string;
   category?: string;
   description?: string;
@@ -44,7 +46,7 @@ interface CmsContent {
 // One CDN request per app session; no polling or realtime subscription.
 const CONTENT_QUERY = `{
   "projects": *[_type == "project"] | order(sortOrder asc, _id asc) {
-    _id, contentTitle, type, category, description, tags, isSelected, youtubeId,
+    _id, contentTitle, projectName, date, type, category, description, tags, isSelected, youtubeId,
     thumbnail, photos, "muxAsset": muxVideo.asset->{playbackId, status}
   },
   "settings": *[_type == "siteSettings" && _id == "siteSettings"][0] {
@@ -123,7 +125,9 @@ export class ProjectService {
         if (!project._id || !project.contentTitle) continue;
         const base = {
           id: project._id,
-          contentTitle: project.contentTitle,
+          brandName: project.contentTitle.trim(),
+          projectName: project.projectName?.trim() || undefined,
+          date: project.date?.trim() || undefined,
           description: project.description,
           tags: project.tags ?? [],
           isSelected: project.isSelected === true,

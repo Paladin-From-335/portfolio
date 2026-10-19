@@ -1,6 +1,7 @@
 <div class="photo-carousel"
-     (mouseenter)="pause()" (mouseleave)="resume()" (click)="onCarouselClick()"
-     (pointerdown)="onPointerDown($event)" (pointerup)="onPointerUp($event)" (pointercancel)="onPointerCancel()">
+     (pointerenter)="onPointerEnter($event)" (pointerleave)="onPointerLeave($event)" (click)="onCarouselClick()"
+     (pointerdown)="onPointerDown($event)" (window:pointerup)="onPointerUp($event)" (window:pointercancel)="onPointerCancel($event)"
+     (window:blur)="onWindowBlur()">
   <button class="photo-carousel__button photo-carousel__button--prev"
           aria-label="Previous photo"
           type="button" (click)="previousManually()">
@@ -15,11 +16,12 @@
   <div #track class="photo-carousel__track"
        [class.photo-carousel__track--no-transition]="!transitionEnabled()"
        [style.transform]="trackTransform"
-       (transitionend)="onTransitionEnd($event)">
+       (transitionend)="onTransitionEnd($event)"
+       (transitioncancel)="onTransitionEnd($event)">
     @for (photo of loopedPhotos(); track $index) {
       <div class="photo-carousel__item"
            [class.photo-carousel__item--side]="isSideItem($index)">
-        <img [src]="photo" [alt]="photoAlts()[$index % photos().length] || ''" loading="lazy" decoding="async">
+        <img [src]="photo" [alt]="photoAlts()[$index % photos().length] || ''" loading="lazy" decoding="async" draggable="false">
       </div>
     }
   </div>

@@ -43,6 +43,20 @@ beforeEach(() => {
 });
 
 describe('ProjectService CMS loading', () => {
+  it('maps the saved title to brand name and normalizes optional project details', async () => {
+    fetchContent.mockResolvedValue({projects: [
+      video('legacy'),
+      video('new', {contentTitle: ' Brand ', projectName: ' Campaign ', date: ' Autumn 2026 '}),
+      video('blank', {projectName: '  ', date: '  '}),
+    ], settings: null});
+    const service = new ProjectService();
+    await service.load();
+    expect(service.videos()[0].brandName).toBe('legacy');
+    expect(service.videos()[1]).toMatchObject({brandName: 'Brand', projectName: 'Campaign', date: 'Autumn 2026'});
+    expect(service.videos()[2].projectName).toBeUndefined();
+    expect(service.videos()[2].date).toBeUndefined();
+  });
+
   it('deduplicates concurrent loads and keeps published content cached across routes', async () => {
     let resolve!: (content: unknown) => void;
     fetchContent.mockReturnValue(

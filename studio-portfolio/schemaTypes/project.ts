@@ -17,10 +17,13 @@ export const project = defineType({
   fields: [
     defineField({
       name: 'contentTitle',
-      title: 'Title',
+      title: 'Brand name',
+      description: 'Stored in the existing title field to preserve previously saved project titles.',
       type: 'string',
       validation: (rule) => rule.required(),
     }),
+    defineField({name: 'projectName', title: 'Project name', type: 'string'}),
+    defineField({name: 'date', title: 'Date', type: 'string'}),
     defineField({
       name: 'type',
       type: 'string',

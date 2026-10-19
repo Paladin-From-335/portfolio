@@ -29,7 +29,6 @@ export class PhotoCarouselComponent implements AfterViewInit, OnDestroy {
   isPaused = signal(false);
   transitionEnabled = signal(false);
   visibleCount = signal(3);
-  slideSlots = signal(3.5);
   loopedPhotos = computed(() => {
     const photos = this.photos();
     if (photos.length < 2) return photos;
@@ -40,11 +39,22 @@ export class PhotoCarouselComponent implements AfterViewInit, OnDestroy {
   private isMoving = false;
   private intervalId?: number;
   private pauseTimeoutId?: number;
+  private movementTimeoutId?: number;
+  private layoutFrameId?: number;
+  private setupFrameId?: number;
+  private destroyed = false;
+  private isHovered = false;
+  private interactionPaused = false;
+  private activePointerId?: number;
+  // CSS transform duration is 400ms. Recover even if its completion event is lost.
+  private readonly movementFallbackMs = 600;
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly handleResize = (): void => {
-    this.updateVisibleCount();
-    requestAnimationFrame(() => {
-      this.moveToCurrentItem(false);
+    window.cancelAnimationFrame(this.layoutFrameId ?? 0);
+    this.layoutFrameId = requestAnimationFrame(() => {
+      if (this.destroyed) return;
+      this.updateVisibleCount();
+      this.finishMovement(true);
     });
   };
 
@@ -54,8 +64,6 @@ export class PhotoCarouselComponent implements AfterViewInit, OnDestroy {
 
   private readonly swipeThreshold = 50;
   private readonly interactionPauseMs = 5000;
-  private pointerDownAt = 0;
-  private readonly longPressThresholdMs = 500;
 
   private lastSwipeAt = 0;
   private readonly swipeCooldownMs = 800;
@@ -70,11 +78,12 @@ export class PhotoCarouselComponent implements AfterViewInit, OnDestroy {
     // Start from the beginning of the middle copy.
     this.currentIndex.set(photosLength);
     this.cdr.detectChanges();
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
+    this.setupFrameId = requestAnimationFrame(() => {
+      this.setupFrameId = requestAnimationFrame(() => {
+        if (this.destroyed) return;
         const item = this.track?.nativeElement.querySelector<HTMLElement>('.photo-carousel__item');
         if (!item) return;
-        this.resizeObserver = new ResizeObserver(() => this.moveToCurrentItem(false));
+        this.resizeObserver = new ResizeObserver(this.handleResize);
         this.resizeObserver.observe(item);
       });
     });
@@ -87,6 +96,10 @@ export class PhotoCarouselComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.destroyed = true;
+    window.clearTimeout(this.movementTimeoutId);
+    window.cancelAnimationFrame(this.layoutFrameId ?? 0);
+    window.cancelAnimationFrame(this.setupFrameId ?? 0);
     window.clearInterval(this.intervalId);
     window.clearTimeout(this.pauseTimeoutId);
     window.removeEventListener('resize', this.handleResize);
@@ -135,29 +148,40 @@ export class PhotoCarouselComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const photosLength = this.photos().length;
-    if (this.currentIndex() >= photosLength * 2) {
-      // First photo of third copy → first photo of middle copy.
-      this.currentIndex.set(photosLength);
-      this.moveToCurrentItem(false);
-    } else if (this.currentIndex() < photosLength) {
-      // Last photo of first copy → last photo of middle copy.
-      this.currentIndex.set(photosLength * 2 - 1);
+    this.finishMovement(event.type === 'transitioncancel');
+  }
+
+  private finishMovement(reposition = false): void {
+    window.clearTimeout(this.movementTimeoutId);
+    this.isMoving = false;
+    const count = this.photos().length;
+    const index = this.currentIndex();
+    const normalized = count > 1 ? ((index % count) + count) % count + count : 0;
+    if (normalized !== index || reposition) {
+      this.currentIndex.set(normalized);
       this.moveToCurrentItem(false);
     }
-    this.isMoving = false;
   }
 
-  pause(): void {
-    this.isPaused.set(true);
+  onPointerEnter(event: PointerEvent): void {
+    if (event.pointerType !== 'mouse') return;
+    this.isHovered = true;
+    this.updatePaused();
   }
 
-  resume(): void {
-    this.isPaused.set(false);
+  onPointerLeave(event: PointerEvent): void {
+    if (event.pointerType !== 'mouse') return;
+    this.isHovered = false;
+    this.updatePaused();
+  }
+
+  private updatePaused(): void {
+    this.isPaused.set(this.isHovered || this.isPointerDown || this.interactionPaused);
   }
 
   pauseTemporarily(): void {
-    this.pause();
+    this.interactionPaused = true;
+    this.updatePaused();
     this.resumeAfterDelay();
   }
 
@@ -170,48 +194,56 @@ export class PhotoCarouselComponent implements AfterViewInit, OnDestroy {
     const track = this.track?.nativeElement;
     const item = track?.querySelector<HTMLElement>('.photo-carousel__item');
 
-    if (!track || !item) return;
+    if (!track || !item) {
+      this.isMoving = false;
+      return;
+    }
+    // Commit an instantaneous loop/resize correction before enabling the next transition.
+    if (animated && !this.transitionEnabled()) void track.offsetWidth;
     this.transitionEnabled.set(animated);
     const itemWidth = item.getBoundingClientRect().width;
     const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0;
     let offset = this.currentIndex() * (itemWidth + gap);
 
-    if (window.innerWidth < 768) {
+    if (getComputedStyle(track).getPropertyValue('--center-active').trim() === '1') {
       const containerWidth =
         track.parentElement?.getBoundingClientRect().width ?? window.innerWidth;
       const centerOffset = (containerWidth - itemWidth) / 2;
       offset -= centerOffset;
     }
-    this.trackTransform = `translateX(-${offset}px)`;
+    const nextTransform = `translateX(-${offset}px)`;
+    const changed = nextTransform !== this.trackTransform;
+    this.trackTransform = nextTransform;
+    window.clearTimeout(this.movementTimeoutId);
+    if (animated && changed && itemWidth > 0) {
+      this.movementTimeoutId = window.setTimeout(() => this.finishMovement(true), this.movementFallbackMs);
+    } else {
+      this.isMoving = false;
+    }
     this.cdr.detectChanges();
   }
 
   private updateVisibleCount(): void {
-    const width = window.innerWidth;
-    if (width < 768) {
-      this.visibleCount.set(1);
-      this.slideSlots.set(1.5);
-    } else if (width < 1024) {
-      this.visibleCount.set(2);
-      this.slideSlots.set(2.5);
-    } else {
-      this.visibleCount.set(3);
-      this.slideSlots.set(3.5);
-    }
+    const track = this.track?.nativeElement;
+    if (!track) return;
+    const count = Number.parseInt(getComputedStyle(track).getPropertyValue('--visible-count'), 10);
+    this.visibleCount.set(Number.isFinite(count) ? count : 3);
   }
 
   onPointerDown(event: PointerEvent): void {
+    if (this.activePointerId !== undefined || (event.pointerType === 'mouse' && event.button !== 0)) return;
+    this.activePointerId = event.pointerId;
     this.isPointerDown = true;
     this.pointerStartX = event.clientX;
     this.pointerStartY = event.clientY;
-    this.pointerDownAt = Date.now();
 
     window.clearTimeout(this.pauseTimeoutId);
-    this.pause();
+    this.updatePaused();
   }
 
   onPointerUp(event: PointerEvent): void {
-    if (!this.isPointerDown) return;
+    if (!this.isPointerDown || event.pointerId !== this.activePointerId) return;
+    this.activePointerId = undefined;
     this.isPointerDown = false;
     const deltaX = event.clientX - this.pointerStartX;
     const deltaY = event.clientY - this.pointerStartY;
@@ -229,27 +261,34 @@ export class PhotoCarouselComponent implements AfterViewInit, OnDestroy {
       }
     }
 
-    this.resumeAfterDelay();
+    this.pauseTemporarily();
   }
 
-  onPointerCancel(): void {
+  onPointerCancel(event: PointerEvent): void {
+    if (event.pointerId !== this.activePointerId) return;
+    this.releasePointer();
+  }
+
+  onWindowBlur(): void {
+    this.isHovered = false;
+    this.releasePointer();
+  }
+
+  private releasePointer(): void {
+    this.activePointerId = undefined;
     this.isPointerDown = false;
-    this.resumeAfterDelay();
+    this.pauseTemporarily();
   }
 
   onCarouselClick(): void {
-    const pressDuration = Date.now() - this.pointerDownAt;
-    if (pressDuration > this.longPressThresholdMs) {
-      return;
-    }
     this.pauseTemporarily();
   }
 
   private resumeAfterDelay(): void {
     window.clearTimeout(this.pauseTimeoutId);
-
     this.pauseTimeoutId = window.setTimeout(() => {
-      this.resume();
+      this.interactionPaused = false;
+      this.updatePaused();
     }, this.interactionPauseMs);
   }
 }

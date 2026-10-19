@@ -10,7 +10,9 @@
       @for (project of selectedProjects(); track project.id) {
         @if (project.videoUrl) {
           <app-youtube-video-preview
-            [videoPreviewTitle]="project.contentTitle"
+            [brandName]="project.brandName"
+            [projectName]="project.projectName"
+            [date]="project.date"
             [videoUrl]="project.videoUrl"
             [thumbnailUrl]="project.thumbnailUrl"
             previewVariant="selected"
